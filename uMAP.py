@@ -8,9 +8,29 @@ import string
 import matplotlib.pyplot as plt
 import seaborn as sns 
 import umap
-cluster_file = "data/horse/ere1_merged_final.bed"
-sra_info_file = 'data/horse/horse_pca.csv'
-af_threshold = 0.7
+
+
+# FIGURE 5 B
+
+## NOTE: you will not be able to regenerate the uMAP figure exactly as it is 
+## even with the random state setting in the uMAP() call you will get a nearly distinct figure every time
+## Recommend just using the illustrator link in the google drive to adjust that figure. 
+
+####REQUIRED VARIABLES######
+cluster_file = "ere1_merged_pop_vcf.bed"
+#cluster_file = "ltr_merged_pop_vcf.bed" #Note: LTR does not have a uMAP figure in the paper - does not look great
+af_threshold = 0.75 #determines the loci allele frequency threshold dropout for panel 1 this was set at 0.75
+####################################################
+
+# Below are the colors I used in the uMAP in the paper and the map figure. They are colorblind safe and do a pretty good
+# job at separating the clusters as it is right now in the paper
+color_map = {'AKHAL-TEKE':'#7e2954ff', 'ARABIAN': '#44bb99ff', 'QUARTER HORSE' : '#99ddffff', \
+			'THOROUGHBRED' : '#ffaabbff', 'MONGOLIAN' : '#77aaddff', 'FRIESIAN' : '#cc6677ff', \
+			'JEJU HORSE' : '#eedd88ff', 'TIBETAN' : '#aaa00cff', 'STANDARDBRED' : '#ee8866ff', \
+			'HANOVERIAN' : '#bbcc33ff', 'FREIBERGER' : '#000000ff'} 
+
+
+sra_info_file = 'horse_pca.csv'
 
 
 breed_samples_count = {'QUARTER HORSE': 27, 'THOROUGHBRED': 26, 'ARABIAN': 26, \
@@ -32,10 +52,7 @@ with open(cluster_file) as f:
 	lines = f.readlines()
 	for line in lines:
 		line = line.split()
-		#if line[0] not in ['X','Y']:
 		t = line[0]+","+line[1]+","+str(line[2])
-		#if len(line[3]) > 0 and len(line[3]) < 2000:
-		#if line[0] == '22' and int(line[1]) >= 0 and int(line[2]) >= 0 :
 		if t not in loci:
 			loci.append(t)
 		entries.append((t,line[-1]))
@@ -80,7 +97,6 @@ cols = sorted(cols, key=str.lower)
 df_new = df[cols]
 df_breeds = df_new
 
-#df_breeds = df_breeds.filter(like='QUARTER HORSE', axis=1)
 
 for i,row in df_breeds.iterrows():
 	for breed_name in list(row.index):
@@ -95,7 +111,6 @@ cols = sorted(cols, key=str.lower)
 df_new = df[cols]
 df_final = df_new
 
-#df_final = df_final.filter(like='QUARTER HORSE', axis=1)
 
 print(df_breeds.shape)
 dropped_idxs = []
@@ -116,10 +131,7 @@ umap_model = umap.UMAP(n_components=2, random_state=42)
 X_umap = umap_model.fit_transform(X)
 y = list(df_final.T.index)
 
-color_map = {'AKHAL-TEKE':'#004949', 'ARABIAN': '#b66dff', 'QUARTER HORSE' : '#DDCC77', \
-			'THOROUGHBRED' : '#117733', 'MONGOLIAN' : '#24ff24', 'FRIESIAN' : '#882255', \
-			'JEJU HORSE' : '#44AA99', 'TIBETAN' : '#490092', 'STANDARDBRED' : '#ff6db6', \
-			'HANOVERIAN' : '#FFCCCC', 'FREIBERGER' : '#BBCCEE'} 
+
 
 def extract_breed_without_number(breed):
 	return ''.join([i for i in breed if not i.isdigit()])

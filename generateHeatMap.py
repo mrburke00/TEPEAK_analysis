@@ -3,9 +3,18 @@ import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns 
 
-cluster_file = 'ltr_merged_pop_vcf.bed'
+# PANEL 5 A
+
+# can also change the centering of the heatmap scale in the clustermap() call below
+# NOTE the LTR heatmap (FIG 9) currently in the paper is not made in this script SEE LTRvsERV2.py
+#####REQUIRED VARIABLES######
+cluster_file = 'ere1_merged_pop_vcf.bed'
+#cluster_file = 'ltr_merged_pop_vcf.bed'
+af_threshold = 0.75 #determines the loci allele frequency threshold dropout for panel 1 this was set at 0.75
+############################################################
+
 sra_info_file = 'horse_sra_simple2.csv'
-af_threshold = 0.75 #determines the loci allele frequency threshold dropout
+
 
 breed_samples_count = {'QUARTER HORSE': 27, 'THOROUGHBRED': 26, 'ARABIAN': 26, \
 					   'MONGOLIAN': 26, 'TIBETAN': 21, 'STANDARDBRED': 15, \

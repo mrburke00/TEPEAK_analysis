@@ -3,9 +3,18 @@ import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns 
 
-cluster_file = 'ltr_merged_pop_vcf.bed'
-sra_info_file = 'horse_sra_simple2.csv'
+# FIGURE 5 C
 
+## Note because of the odd number of breeds I ended up doing a 3x3 and then just adding the last two 
+# in illustrator. You can use the del n_cols[] command after line 80 to cycle the remaining two breeds
+# right now its only going to make figures for 9 out of the 11 breeds. 
+
+####REQUIRED VARIABLES######
+cluster_file = "ere1_merged_pop_vcf.bed"
+#cluster_file = "ltr_merged_pop_vcf.bed"
+####################################################
+
+sra_info_file = 'horse_sra_simple2.csv'
 
 breed_samples_count = {'QUARTER HORSE': 27, 'THOROUGHBRED': 26, 'ARABIAN': 26, \
                        'MONGOLIAN': 26, 'TIBETAN': 21, 'STANDARDBRED': 15, \

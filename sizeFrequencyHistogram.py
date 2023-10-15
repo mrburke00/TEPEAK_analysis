@@ -2,14 +2,17 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 
+#FIGURE 3 AND SUPP 1
 
-%matplotlib inline
-min_size = '200'
-max_size = '1000'
-species = "horse"
-data_dir = "../sv_analysis/data/"
-sv_info_file = data_dir+species+'/'+species+'_info_265.txt'
+#####REQUIRED VARIABLES######
+min_size = '200' # determines minimum and maximum bp range for histogram THEY ARE STRINGS FOR A REASON
+max_size = '2000'
+species = "horse"  # takes in overall VCF pop info file for each species
+############################################################
 
+
+
+sv_info_file = species+'_info.txt'
 
 df = pd.read_csv(sv_info_file, sep='\t', lineterminator='\n')
 df.columns = ['chrom','start','end','length','seq','species']
@@ -18,8 +21,8 @@ df['length'].value_counts()
 df = df[df['length']!='.']
 
 #### if you get NaN error run this first line and then delete whatever index is causing the error
-#print(df[df['length'].isnull()])
-#df = df.drop(73676)
+print(df[df['length'].isnull()])
+df = df.drop(73676)
 ####
 
 df['length'] = df['length'].astype(int)
@@ -36,5 +39,9 @@ t = t_rows['length'].value_counts()
 
 plt.hist(t_rows['length'], density=False, bins=len(t))
 #plt.yscale('log')
-plt.ylabel('log(Frequency)')
+#plt.ylabel('log(Frequency)')
+
+plt.ylabel('Frequency')
 plt.xlabel('Insertion Size (bp)')
+
+plt.show()

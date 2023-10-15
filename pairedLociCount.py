@@ -3,9 +3,20 @@ import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns 
 
-cluster_file = 'ltr_merged_pop_vcf.bed'
-sra_info_file = 'horse_sra_simple2.csv'
+# FIGURE 6
+
+# NOTE play around with the center variable in the heatmap() call. 
+# the default allows too much blue 
+
+####REQUIRED VARIABLES######
+cluster_file = 'ere1_merged_pop_vcf.bed'
+#cluster_file = 'ltr_merged_pop_vcf.bed'
 af_threshold = 0.75 #determines the loci allele frequency threshold dropout
+####################################################
+
+
+
+sra_info_file = 'horse_sra_simple2.csv'
 
 
 breed_samples_count = {'QUARTER HORSE': 27, 'THOROUGHBRED': 26, 'ARABIAN': 26, \
@@ -56,15 +67,15 @@ for i,row in df_final.iterrows():
 		row[breed_name] = t
 		
 
-for i,row in df_final.iterrows():
-	rare_allele = True
-	for breed_name in list(row.index):
-		if row[breed_name] > af_threshold:
-			rare_allele = False
-			break
-	if rare_allele:
-		df_final = df_final.drop(i, axis = 0)
-		df_final.reset_index(drop=True)
+#for i,row in df_final.iterrows():
+#	rare_allele = True
+#	for breed_name in list(row.index):
+#		if row[breed_name] > af_threshold:
+#			rare_allele = False
+#			break
+#	if rare_allele:
+#		df_final = df_final.drop(i, axis = 0)
+#		df_final.reset_index(drop=True)
 
 
 pair_counts = pd.DataFrame(index=df_final.columns, columns=df_final.columns)
@@ -72,7 +83,7 @@ pair_counts = pd.DataFrame(index=df_final.columns, columns=df_final.columns)
 for breed1 in df_final.columns:
 	for breed2 in df_final.columns:
 		if breed1 != breed2:
-			count = ((df_final[breed1] > threshold) & (df_final[breed2] > threshold)).sum()
+			count = ((df_final[breed1] > af_threshold) & (df_final[breed2] > af_threshold)).sum()
 			pair_counts.loc[breed1, breed2] = count
 		else:
 			pair_counts.loc[breed1, breed2] = 0
@@ -82,6 +93,6 @@ pair_counts = pair_counts.astype(int)
 
 # Plot the pairs as a heatmap
 plt.figure(figsize=(10, 8))
-sns.heatmap(pair_counts, annot=True,cmap='coolwarm', fmt='d')
+sns.heatmap(pair_counts, annot=True,cmap='coolwarm', fmt='d'), #center = )
 plt.title(f'Number of Shared Loci for Each Breed Pair')
 plt.show()

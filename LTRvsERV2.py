@@ -3,11 +3,17 @@ import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns 
 
-erv_file = "data/horse/ltr_erv2_int_final.bed"
+#FIGURE 9
 
-ltr_file = 'data/horse/horse_1373-1376_pop_vcf.txt'
+# Note if you want to remove the dendogram tree uncomment the second to last line
 
-sra_info_file = 'data/horse/horse_sra_simple2.csv'
+####REQUIRED VARIABLES######
+ltr_file = 'ltr_merged_pop_vcf.bed'
+erv_file = 'ltr_erv2_int_final.bed'
+####################################################
+
+sra_info_file = 'horse_sra_simple2.csv'
+
 
 
 breed_samples_count = {'QUARTER HORSE': 27, 'THOROUGHBRED': 26, 'ARABIAN': 26, \
@@ -104,6 +110,7 @@ cols = list(df_erv.columns.values)
 cols = sorted(cols, key=str.lower)
 df_new = df_erv[cols]
 df_erv = df_new
-row_colors = pd.Series(map_idx_erv).map({1: 'darkyellow', 0: 'white'})
-sns.clustermap(df_ltr, annot=False, row_colors=row_colors, cmap='coolwarm')
+row_colors = pd.Series(map_idx_erv).map({1: 'gold', 0: 'white'})
+clustermap = sns.clustermap(df_ltr, annot=False, row_colors=row_colors, cmap='coolwarm')
+#clustermap.ax_col_dendrogram.set_visible(False)
 plt.show()
