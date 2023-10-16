@@ -8,9 +8,9 @@ import seaborn as sns
 # can also change the centering of the heatmap scale in the clustermap() call below
 # NOTE the LTR heatmap (FIG 9) currently in the paper is not made in this script SEE LTRvsERV2.py
 #####REQUIRED VARIABLES######
-cluster_file = 'ere1_merged_pop_vcf.bed'
-#cluster_file = 'ltr_merged_pop_vcf.bed'
-af_threshold = 0.75 #determines the loci allele frequency threshold dropout for panel 1 this was set at 0.75
+#cluster_file = 'ere1_merged_pop_vcf.bed'
+cluster_file = 'ltr_merged_pop_vcf.bed'
+af_threshold = 0.25 #determines the loci allele frequency threshold dropout for panel 1 this was set at 0.75
 ############################################################
 
 sra_info_file = 'horse_sra_simple2.csv'
@@ -48,6 +48,7 @@ for i,(coord, sample_name) in enumerate(entries):
 		breed_name = meta_data.loc[meta_data['sra'] == sample_name]['breed'].values[0]
 		if breed_name not in samples.keys():
 			samples[breed_name] = np.zeros(len(loci))
+			#samples[breed_name] = [0]*len(loci)
 		if coord.split(',')[0] not in ['X', 'Y']: # check which SV in reference to TE loci 
 			idx = loci.index(coord)
 			samples[breed_name][idx] += 1

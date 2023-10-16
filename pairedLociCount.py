@@ -15,7 +15,6 @@ af_threshold = 0.75 #determines the loci allele frequency threshold dropout
 ####################################################
 
 
-
 sra_info_file = 'horse_sra_simple2.csv'
 
 
