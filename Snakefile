@@ -1,5 +1,5 @@
 exts = ['png', 'pdf']
-sra_to_breed_file='data/horse_pca.csv'
+sra_to_breed_file='data/horse_sra_final.csv'
 
 rule all:
     input:
@@ -9,7 +9,8 @@ rule all:
       expand('doc/breed_loci_af_heatmap.{ext}', ext = exts),
       expand('doc/breed_af_histo.{ext}', ext = exts),
       expand('doc/breed_loci_af_heatmap.{ext}', ext = exts),
-      expand('doc/pairwise_shared_loci_heatmap.{ext}', ext = exts)
+      expand('doc/pairwise_shared_loci_heatmap.{ext}', ext = exts),
+      expand('doc/ere_breed_af.{ext}', ext = exts)
 
 rule size_freq_hist:
     input:
@@ -48,18 +49,18 @@ rule af_box_plots:
         breed_file = sra_to_breed_file,
         bed_files = expand('data/ere{i}.bed', i=[1,2,3,4]),
     output:
-        'doc/ere_bree_af.{ext}'
+        'doc/ere_breed_af.{ext}'
     params:
         titles = 'ERE-1 ERE-2 ERE-3 ERE-4',
-        min_ac = 2
+        min_ac = 0
     shell:
         """
-            python af_box_plots.py \
+            python src/af_box_plots.py \
                 --breed_file {input.breed_file} \
                 --bed_files {input.bed_files} \
                 --titles {params.titles} \
                 --min_ac {params.min_ac} \
-                --out_file {out_file}
+                --out_file {output}
         """
 
 rule breed_af_histo:
@@ -90,7 +91,7 @@ rule breed_loci_af_heatmap:
     params:
         width = 2,
         height = 2,
-        min_af = 0.1
+        min_af = 0.75
     shell:
         """
             python src/breed_loci_af_heatmap.py \
@@ -112,7 +113,7 @@ rule pairwise_shared_loci_heatmap:
     params:
         width = 10,
         height = 10,
-        min_af = 0.1
+        min_af = 0.75
     shell:
         """
             python src/pairwise_shared_loci_heatmap.py \

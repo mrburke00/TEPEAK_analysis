@@ -35,9 +35,10 @@ def main():
     fig, axs = plt.subplots(len(args.bed_files),1, figsize=(8,8))
 
     ax_i = 0
+
     for bed_file in args.bed_files:
         with open(bed_file) as lines:
-            af = {}
+            ac = {}
 
             for line in lines:
                 A = line.rstrip().split()
@@ -45,6 +46,7 @@ def main():
                 loci = (A[0], A[1], A[2])
                 sr = A[3]
 
+                if sr not in sr_to_breed: continue
                 breed = sr_to_breed[sr]
                 if breed not in breed_count:
                     breed_count[breed] = {}
@@ -52,19 +54,23 @@ def main():
                     breed_count[breed][sr] = 0
                 breed_count[breed][sr] = breed_count[breed][sr] + 1
 
-                if breed not in af:
-                    af[breed] = {}
-                if loci not in af[breed]:
-                    af[breed][loci] = 0
+                if breed not in ac:
+                    ac[breed] = {}
+                if loci not in ac[breed]:
+                    ac[breed][loci] = 0
 
-                af[breed][loci] = af[breed][loci] + 1
+                ac[breed][loci] = ac[breed][loci] + 1
+
+
+            breeds = sorted(list(set(ac.keys())))
 
             D = []
             for breed in breeds:
                 d = []
-                for loci in af[breed]:
-                    if af[breed][loci] >= args.min_ac:
-                        d.append(af[breed][loci] / len(breed_count[breed]))
+
+                for loci in ac[breed]:
+                    if ac[breed][loci] >= args.min_ac:
+                        d.append(ac[breed][loci] / len(breed_count[breed]))
                 D.append(d)
 
             axs[ax_i].boxplot(D)
